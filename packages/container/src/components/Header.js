@@ -3,8 +3,10 @@ import AppBar from "@material-ui/core/AppBar";
 import Button from "@material-ui/core/Button";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
 import { Link as RouterLink } from "react-router-dom";
+import { Box } from "@material-ui/core";
+import { useStore } from "../store/useDarkMode";
 
 const useStyles = makeStyles((theme) => ({
 	"@global": {
@@ -56,40 +58,48 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Header({ isSignedIn, onSignOut }) {
 	const classes = useStyles();
+	const theme = useTheme();
+	//const colorMode = useContext(ColorModeContext);
+
+	const { mode, toggleMode } = useStore();
 
 	const onClick = () => {
 		if (isSignedIn && onSignOut) {
 			onSignOut();
 		}
 	};
-
+	//console.log({ type: theme.palette.type, theme });
 	return (
-		<React.Fragment>
-			<AppBar
-				position="static"
-				color="default"
-				elevation={0}
-				className={classes.appBar}>
-				<Toolbar className={classes.toolbar}>
-					<Typography
-						variant="h6"
-						color="inherit"
-						noWrap
-						component={RouterLink}
-						to="/">
-						App
-					</Typography>
-					<Button
-						color="primary"
-						variant="outlined"
-						className={classes.link}
-						component={RouterLink}
-						to={isSignedIn ? "/" : "/auth/signin"}
-						onClick={onClick}>
-						{isSignedIn ? "Logout" : "Login"}
-					</Button>
-				</Toolbar>
-			</AppBar>
-		</React.Fragment>
+		<AppBar
+			position="static"
+			color="default"
+			elevation={0}
+			className={classes.appBar}>
+			<Toolbar className={classes.toolbar}>
+				<Typography
+					variant="h6"
+					color="inherit"
+					noWrap
+					component={RouterLink}
+					to="/">
+					App
+				</Typography>
+
+				<Box p={2} bgcolor={theme.palette.background.default}>
+					{theme.palette.type} mode
+					<Button onClick={toggleMode}>Toggle theme</Button>
+				</Box>
+
+				<Button
+					color="primary"
+					variant="outlined"
+					className={classes.link}
+					component={RouterLink}
+					to={isSignedIn ? "/" : "/auth/signin"}
+					onClick={onClick}>
+					{isSignedIn ? "Logout" : "Login"}
+				</Button>
+			</Toolbar>
+		</AppBar>
 	);
 }

@@ -11,7 +11,15 @@ module.exports = {
 						plugins: ["@babel/plugin-transform-runtime"]
 					}
 				}
+			},
+			{
+				test: /\.tsx?$/,
+				use: "ts-loader",
+				exclude: /node_modules/
 			}
 		]
+	},
+	resolve: {
+		extensions: [".tsx", ".ts", ".js"]
 	}
 };
